@@ -28,6 +28,7 @@ import kotlinx.coroutines.withContext
 class MainActivity : ComponentActivity() {
 
     private val RESULT_1 = "Result #1"
+    private val RESULT_2 = "Result #2"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -39,9 +40,13 @@ class MainActivity : ComponentActivity() {
                     Content(textValue, modifier = Modifier.padding(innerPadding), {
                         //IO, Main, Default
                         CoroutineScope(IO).launch {
-                            val result = fakeApiRequest()
+                            val result1 = getResult1FromApi()
                             withContext(Dispatchers.Main) {
-                                textValue = result
+                                textValue = result1
+                            }
+                            val result2 = getResult2FromApi()
+                            withContext(Dispatchers.Main) {
+                                textValue = result2
                             }
                         }
                     })
@@ -50,14 +55,16 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private suspend fun fakeApiRequest(): String {
-        return getResult1FromApi()
-    }
-
     private suspend fun getResult1FromApi(): String {
         logThread("getResult1FromApi")
-        delay(1_000)
+        delay(5_00)
         return RESULT_1
+    }
+
+    private suspend fun getResult2FromApi(): String {
+        logThread("getResult2FromApi")
+        delay(3_000)
+        return RESULT_2
     }
 
     private fun logThread(methodName: String) {
