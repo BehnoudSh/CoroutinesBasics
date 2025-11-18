@@ -27,8 +27,11 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
 
-// Network timeouts with Kotlin Coroutines
-// We use withTimeoutOrNull
+/*
+  ***Network timeouts with Kotlin Coroutines***
+
+ We use withTimeoutOrNull
+*/
 class MainActivity1 : ComponentActivity() {
 
     private val RESULT_1 = "Result #1"
