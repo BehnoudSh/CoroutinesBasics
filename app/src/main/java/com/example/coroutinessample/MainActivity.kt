@@ -25,6 +25,50 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+
+/*
+    ***Kotlin Coroutines Beginner***
+
+Coroutines are not threads.
+They are similar to threads, but they are not threads themselves.
+You can think of them as a series of “jobs” that need to run in a certain environment — and that environment is a thread.
+
+Multiple coroutine jobs can run on the same thread, even at the same time conceptually.
+
+So when you write a suspend fun that needs to do some work, it must be executed inside a coroutine.
+
+coroutineScope is basically a way to group coroutines (jobs).
+It lets you organize multiple tasks together and control what happens to them — for example, when they finish, or if one of them gets cancelled, and so on.
+It’s like saying: “run these jobs within the scope of a certain thread.”
+
+Dispatchers:
+
+IO: For network operations, API calls, reading from a database, etc.
+
+Main: For work that must run on the main (UI) thread.
+
+Default: For heavy computational tasks.
+
+CoroutineScope(Dispatchers.IO).launch {
+    // background work
+}
+
+
+After the work is done, you may want to update the UI somewhere.
+Because the coroutine is running in the background, you cannot directly update the UI (it would cause a crash).
+The solution is:
+
+withContext(Dispatchers.Main) {
+    // update UI here
+}
+
+
+The interesting part is that coroutines are somewhat independent of threads.
+You can start a task in one coroutine, pass the result to another coroutine, and eventually bring the result back to the main thread to display it.
+This is usuallt the pattern that we use most of the time
+*/
+
+
 class MainActivity : ComponentActivity() {
 
     private val RESULT_1 = "Result #1"
