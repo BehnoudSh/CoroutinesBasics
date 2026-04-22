@@ -1,7 +1,6 @@
 package com.example.coroutinessample
 
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -34,7 +33,7 @@ import kotlinx.coroutines.launch
 
 //Kotlin Coroutine Jobs
 
-class MainActivity2 : ComponentActivity() {
+class ActivityStep2CoroutineJobs : ComponentActivity() {
 
     private val PROGRESS_MAX = 100
     private val PROGRESS_START = 0
@@ -80,7 +79,6 @@ class MainActivity2 : ComponentActivity() {
 
     }
 
-    fun
 
     fun initJob() {
         buttonTitleValueOut = "Start Job #1"
@@ -125,7 +123,7 @@ class MainActivity2 : ComponentActivity() {
     //}
     fun showToast(text: String) {
         GlobalScope.launch(Main) {
-            Toast.makeText(this@MainActivity2, text, Toast.LENGTH_SHORT).show()
+            Toast.makeText(this@ActivityStep2CoroutineJobs, text, Toast.LENGTH_SHORT).show()
 
         }
     }

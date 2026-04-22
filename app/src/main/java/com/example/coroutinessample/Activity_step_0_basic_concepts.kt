@@ -38,7 +38,7 @@ Multiple coroutine jobs can run on the same thread, even at the same time concep
 So when you write a suspend fun that needs to do some work, it must be executed inside a coroutine.
 
 coroutineScope is basically a way to group coroutines (jobs).
-It lets you organize multiple tasks together and control what happens to them — for example, when they finish, or if one of them gets cancelled, and so on.
+It lets you organize multiple tasks together and control what happens to them — for example, when they finish, or if one of them gets canceled, and so on.
 It’s like saying: “run these jobs within the scope of a certain thread.”
 
 Dispatchers:
@@ -65,11 +65,11 @@ withContext(Dispatchers.Main) {
 
 The interesting part is that coroutines are somewhat independent of threads.
 You can start a task in one coroutine, pass the result to another coroutine, and eventually bring the result back to the main thread to display it.
-This is usuallt the pattern that we use most of the time
+This is usually the pattern that we use most of the time
 */
 
 
-class MainActivity : ComponentActivity() {
+class ActivityStep0BasicConcepts : ComponentActivity() {
 
     private val RESULT_1 = "Result #1"
     private val RESULT_2 = "Result #2"
@@ -81,7 +81,7 @@ class MainActivity : ComponentActivity() {
 
             CoroutinesSampleTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Content(textValue, modifier = Modifier.padding(innerPadding), {
+                    Content0(textValue, modifier = Modifier.padding(innerPadding), {
                         //IO, Main, Default
                         CoroutineScope(IO).launch {
                             val result1 = getResult1FromApi()
@@ -117,7 +117,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Content(textTitle: String, modifier: Modifier = Modifier, onClick: () -> Unit) {
+fun Content0(textTitle: String, modifier: Modifier = Modifier, onClick: () -> Unit) {
     Column {
         Button(onClick = onClick, modifier = modifier.padding(16.dp)) {
             Text(text = "Click me!")

@@ -11,35 +11,32 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CoroutinesSample">
         <activity
-            android:name=".MainActivity"
+            android:name=".ActivityStep0BasicConcepts"
             android:exported="true"
-            android:label="@string/app_name"
+            android:label="BasicConcepts"
             android:theme="@style/Theme.CoroutinesSample">
             <!--            <intent-filter>-->
             <!--                <action android:name="android.intent.action.MAIN" />-->
-
             <!--                <category android:name="android.intent.category.LAUNCHER" />-->
             <!--            </intent-filter>-->
         </activity>
         <activity
-            android:name=".MainActivity1"
+            android:name=".ActivityStep1NetworkTimeouts"
             android:exported="true"
-            android:label="@string/app_name"
+            android:label="NetworkTimeouts"
             android:theme="@style/Theme.CoroutinesSample">
             <!--            <intent-filter>-->
             <!--                <action android:name="android.intent.action.MAIN" />-->
-
             <!--                <category android:name="android.intent.category.LAUNCHER" />-->
             <!--            </intent-filter>-->
         </activity>
         <activity
-            android:name=".MainActivity2"
+            android:name=".ActivityStep2CoroutineJobs"
             android:exported="true"
-            android:label="@string/app_name"
+            android:label="CoroutineJobs"
             android:theme="@style/Theme.CoroutinesSample">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

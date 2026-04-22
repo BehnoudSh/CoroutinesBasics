@@ -32,7 +32,7 @@ import kotlinx.coroutines.withTimeoutOrNull
 
  We use withTimeoutOrNull
 */
-class MainActivity1 : ComponentActivity() {
+class ActivityStep1NetworkTimeouts : ComponentActivity() {
 
     private val RESULT_1 = "Result #1"
     private val RESULT_2 = "Result #2"
