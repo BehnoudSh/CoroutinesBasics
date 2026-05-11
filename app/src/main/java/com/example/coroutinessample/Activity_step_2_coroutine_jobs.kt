@@ -12,12 +12,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.ProgressIndicatorDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -25,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.coroutinessample.ui.theme.CoroutinesSampleTheme
 import kotlinx.coroutines.CompletableJob
+import kotlinx.coroutines.Delay
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
@@ -35,15 +37,13 @@ import kotlinx.coroutines.launch
 
 class ActivityStep2CoroutineJobs : ComponentActivity() {
 
-    private val PROGRESS_MAX = 100
-    private val PROGRESS_START = 0
+    private val PROGRESS_START = 0f
     private val JOB_TIME = 4_000 //ms
     private lateinit var job: CompletableJob
 
     var textValueOut by mutableStateOf("")
     var buttonTitleValueOut by mutableStateOf("")
-    var progressStartValueOut by mutableStateOf(0)
-    var progressMaxValueOut by mutableStateOf(0)
+    var currentProgressValueOut by mutableFloatStateOf(PROGRESS_START)
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,8 +52,7 @@ class ActivityStep2CoroutineJobs : ComponentActivity() {
         setContent {
             var textValue by remember { mutableStateOf(textValueOut) }
             var buttonTitleValue by remember { mutableStateOf(buttonTitleValueOut) }
-            var progressStartValue by remember { mutableIntStateOf(progressStartValueOut) }
-            var progressMaxValue by remember { mutableIntStateOf(progressMaxValueOut) }
+            var currentProgressValue by remember { mutableFloatStateOf(currentProgressValueOut) }
 
             LaunchedEffect(textValueOut, buttonTitleValueOut) {
                 textValue = textValueOut
@@ -66,22 +65,32 @@ class ActivityStep2CoroutineJobs : ComponentActivity() {
                         textTitle = textValue,
                         modifier = Modifier.padding(innerPadding),
                         buttonTitle = buttonTitleValue,
-                        progessStart = progressStartValue,
-                        progressMax = progressMaxValue,
+                        currentProgress = currentProgressValue,
                         onClick = {
                             if (!::job.isInitialized)
                                 initJob()
+
+                            startJob()
                         })
                 }
             }
         }
+    }
 
+    fun startJob() {
+        buttonTitleValueOut = "Cancel Job"
+        textValueOut = "Job Started"
+        (0 until JOB_TIME).forEach { i ->
+            Delay()
+            currentProgressValueOut += (100f / JOB_TIME)
+            buttonTitleValueOut = "Start Job$i"
+            println("currentProgressValueOut: $currentProgressValueOut")
+        }
 
     }
 
-
     fun initJob() {
-        buttonTitleValueOut = "Start Job #1"
+        buttonTitleValueOut = "Start Job"
         textValueOut = ""
         job = Job()
         job.invokeOnCompletion {
@@ -94,8 +103,7 @@ class ActivityStep2CoroutineJobs : ComponentActivity() {
                 showToast(msg)
             }
         }
-        progressStartValueOut = PROGRESS_START
-        progressMaxValueOut = PROGRESS_MAX
+        currentProgressValueOut = PROGRESS_START
     }
 
     // ❌ GlobalScope (Unstructured Concurrency)
@@ -133,19 +141,19 @@ class ActivityStep2CoroutineJobs : ComponentActivity() {
     fun Content2(
         textTitle: String,
         buttonTitle: String,
-        progessStart: Int,
-        progressMax: Int,
+        currentProgress: Float,
         modifier: Modifier = Modifier,
         onClick: () -> Unit
     ) {
-
         Column(modifier = modifier) {
-
             LinearProgressIndicator(
-                progress = 0.6f,
+                progress = { currentProgress },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(6.dp)
+                    .height(6.dp),
+                color = ProgressIndicatorDefaults.linearColor,
+                trackColor = ProgressIndicatorDefaults.linearTrackColor,
+                strokeCap = ProgressIndicatorDefaults.LinearStrokeCap,
             )
             Button(onClick = onClick, modifier = modifier.padding(16.dp)) {
                 Text(text = buttonTitle)
