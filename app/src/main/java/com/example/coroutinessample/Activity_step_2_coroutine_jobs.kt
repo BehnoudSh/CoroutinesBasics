@@ -26,10 +26,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.coroutinessample.ui.theme.CoroutinesSampleTheme
 import kotlinx.coroutines.CompletableJob
-import kotlinx.coroutines.Delay
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
@@ -38,13 +40,12 @@ import kotlinx.coroutines.launch
 class ActivityStep2CoroutineJobs : ComponentActivity() {
 
     private val PROGRESS_START = 0f
+    private val PROGRESS_MAX = 100f
     private val JOB_TIME = 4_000 //ms
     private lateinit var job: CompletableJob
-
     var textValueOut by mutableStateOf("")
     var buttonTitleValueOut by mutableStateOf("")
     var currentProgressValueOut by mutableFloatStateOf(PROGRESS_START)
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,12 +54,11 @@ class ActivityStep2CoroutineJobs : ComponentActivity() {
             var textValue by remember { mutableStateOf(textValueOut) }
             var buttonTitleValue by remember { mutableStateOf(buttonTitleValueOut) }
             var currentProgressValue by remember { mutableFloatStateOf(currentProgressValueOut) }
-
-            LaunchedEffect(textValueOut, buttonTitleValueOut) {
+            LaunchedEffect(textValueOut, buttonTitleValueOut, currentProgressValueOut) {
                 textValue = textValueOut
                 buttonTitleValue = buttonTitleValueOut
+                currentProgressValue = currentProgressValueOut
             }
-
             CoroutinesSampleTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Content2(
@@ -69,24 +69,24 @@ class ActivityStep2CoroutineJobs : ComponentActivity() {
                         onClick = {
                             if (!::job.isInitialized)
                                 initJob()
-
-                            startJob()
+                            CoroutineScope(IO).launch {
+                                startJob()
+                            }
                         })
                 }
             }
         }
     }
 
-    fun startJob() {
+    suspend fun startJob() {
         buttonTitleValueOut = "Cancel Job"
         textValueOut = "Job Started"
-        (0 until JOB_TIME).forEach { i ->
-            Delay()
-            currentProgressValueOut += (100f / JOB_TIME)
-            buttonTitleValueOut = "Start Job$i"
+        (PROGRESS_START.toInt() until PROGRESS_MAX.toInt()).forEach { _ ->
+            val section: Float = (JOB_TIME / PROGRESS_MAX)
+            delay(section.toLong())
+            currentProgressValueOut += 1
             println("currentProgressValueOut: $currentProgressValueOut")
         }
-
     }
 
     fun initJob() {
@@ -132,10 +132,8 @@ class ActivityStep2CoroutineJobs : ComponentActivity() {
     fun showToast(text: String) {
         GlobalScope.launch(Main) {
             Toast.makeText(this@ActivityStep2CoroutineJobs, text, Toast.LENGTH_SHORT).show()
-
         }
     }
-
 
     @Composable
     fun Content2(
@@ -147,7 +145,7 @@ class ActivityStep2CoroutineJobs : ComponentActivity() {
     ) {
         Column(modifier = modifier) {
             LinearProgressIndicator(
-                progress = { currentProgress },
+                progress = { currentProgress * 0.01f },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(6.dp),
