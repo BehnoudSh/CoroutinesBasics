@@ -69,7 +69,7 @@ class ActivityStep2CoroutineJobs : ComponentActivity() {
                         onClick = {
                             if (!::job.isInitialized)
                                 initJob()
-                            CoroutineScope(IO).launch {
+                            CoroutineScope(IO + job).launch {
                                 startJob()
                             }
                         })
@@ -87,6 +87,10 @@ class ActivityStep2CoroutineJobs : ComponentActivity() {
             currentProgressValueOut += 1
             println("currentProgressValueOut: $currentProgressValueOut")
         }
+//        if (currentProgressValueOut.toInt()==100)
+//        {
+//            job.complete()
+//        }
     }
 
     fun initJob() {
